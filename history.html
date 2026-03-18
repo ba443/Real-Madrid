@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Real Madrid CF — History</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <style>
+    .history-hero {
+      padding-top: 70px; height: 500px;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+    }
+    .history-hero-bg {
+      position: absolute; inset: 0;
+      background: url('images/squad.jpg') center center / cover no-repeat;
+      opacity: 0.12;
+    }
+    .history-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(8,8,8,0.6) 0%, rgba(8,8,8,0.95) 100%);
+    }
+    .history-hero-content { position: relative; z-index: 2; padding: 0 2rem; }
+    .history-hero-year {
+      position: absolute; bottom: -1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(8rem,20vw,16rem); font-weight: 900;
+      color: rgba(201,168,76,0.05); line-height: 1;
+      pointer-events: none; user-select: none;
+    }
+    /* Timeline */
+    .timeline-section { padding: 6rem 5rem; }
+    .timeline { position: relative; max-width: 800px; margin: 4rem auto 0; }
+    .timeline::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: rgba(201,168,76,0.15); transform: translateX(-50%);
+    }
+    .timeline-item {
+      display: flex; gap: 3rem; align-items: flex-start;
+      margin-bottom: 3.5rem; position: relative;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s, transform 0.6s;
+    }
+    .timeline-item.visible { opacity: 1; transform: translateY(0); }
+    .timeline-item:nth-child(odd) { flex-direction: row-reverse; text-align: right; }
+    .timeline-item:nth-child(odd) .timeline-content { align-items: flex-end; }
+    .timeline-dot {
+      position: absolute; left: 50%; top: 6px;
+      width: 12px; height: 12px;
+      border: 2px solid var(--gold); background: var(--black);
+      border-radius: 50%; transform: translateX(-50%); z-index: 2;
+    }
+    .timeline-year-badge { min-width: calc(50% - 2.5rem); text-align: right; }
+    .timeline-item:nth-child(odd) .timeline-year-badge { text-align: left; }
+    .timeline-year { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--gold); }
+    .timeline-content { display: flex; flex-direction: column; min-width: calc(50% - 2.5rem); }
+    .timeline-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .timeline-text { font-size: 0.85rem; color: rgba(245,240,232,0.5); line-height: 1.7; }
+    /* Values */
+    .values-section { padding: 6rem 5rem; background: var(--dark-2); border-top: 1px solid rgba(201,168,76,0.1); }
+    .values-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; background: rgba(201,168,76,0.08); margin-top: 3rem; }
+    .value-card { background: var(--dark); padding: 3rem 2.5rem; position: relative; overflow: hidden; transition: background 0.3s; }
+    .value-card:hover { background: var(--dark-2); }
+    .value-icon { font-size: 2rem; color: var(--gold); margin-bottom: 1.5rem; display: block; }
+    .value-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .value-text { font-size: 0.85rem; color: rgba(245,240,232,0.5); line-height: 1.8; }
+    .value-num { position: absolute; bottom: 1rem; right: 1.5rem; font-family: 'Barlow Condensed', sans-serif; font-size: 4rem; font-weight: 900; color: rgba(201,168,76,0.05); line-height: 1; }
+    /* Presidents */
+    .presidents-section { padding: 6rem 5rem; }
+    .presidents-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 1.5px; background: rgba(201,168,76,0.08); margin-top: 3rem; }
+    .president-card { background: var(--dark); padding: 2rem 1.5rem; border-bottom: 2px solid transparent; transition: border-color 0.3s, background 0.3s; }
+    .president-card:hover { border-color: var(--gold); background: var(--dark-2); }
+    .president-era { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .president-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; line-height: 1.2; }
+    @media (max-width: 900px) {
+      .timeline-section, .values-section, .presidents-section { padding: 4rem 2rem; }
+      .values-grid { grid-template-columns: 1fr; }
+      .timeline::before { left: 20px; }
+      .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; text-align: left; padding-left: 3rem; }
+      .timeline-dot { left: 20px; }
+      .timeline-item:nth-child(odd) .timeline-content { align-items: flex-start; }
+      .timeline-year-badge { min-width: unset; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <img src="images/realmadrid.jpg" alt="Real Madrid" class="nav-logo-img"/>
+    <div class="nav-brand">Real<br>Madrid</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="squad.html">Squad</a></li>
+    <li><a href="matches.html">Matches</a></li>
+    <li><a href="history.html" class="active-link">History</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html" class="nav-cta">Sign In</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="history-hero">
+  <div class="history-hero-bg"></div>
+  <div class="history-hero-year">1902</div>
+  <div class="history-hero-content">
+    <p class="page-hero-sub">Est. 1902 — Madrid, Spain</p>
+    <h1 class="page-hero-title" style="font-size:clamp(2.5rem,6vw,4.5rem);">
+      Club <span style="color:var(--gold)">History</span>
+    </h1>
+    <p style="font-size:0.9rem;color:rgba(245,240,232,0.45);max-width:500px;margin:1rem auto 0;line-height:1.8;">
+      More than a club. A century of excellence, passion, and the relentless pursuit of greatness.
+    </p>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<section class="timeline-section">
+  <p class="section-eyebrow" style="text-align:center;">Our Story</p>
+  <h2 class="section-title" style="text-align:center;">A Legacy <span>Built to Last</span></h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">1902</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Foundation</div>
+        <div class="timeline-text">Real Madrid Club de Fútbol is founded on March 6, 1902 in Madrid, Spain by a group of football enthusiasts.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">1920</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Royal Patronage</div>
+        <div class="timeline-text">King Alfonso XIII grants the club the title "Real" (Royal), adding the crown to the crest.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">1955</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">European Dominance Begins</div>
+        <div class="timeline-text">Real Madrid wins the inaugural UEFA European Cup, launching an era of continental dominance.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">1960</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">The Legendary Five</div>
+        <div class="timeline-text">Five consecutive European Cups — a record that cemented Madrid as Europe's greatest club of the era.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">2002</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">Centenary Triumph</div>
+        <div class="timeline-text">Real Madrid celebrates its 100th anniversary by winning a ninth Champions League title — La Novena.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year-badge"><div class="timeline-year">2022</div></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-title">La Decimocuarta</div>
+        <div class="timeline-text">Under Carlo Ancelotti, Real Madrid claims its 14th Champions League, defeating Liverpool in Paris.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <p class="section-eyebrow" style="text-align:center;">What We Stand For</p>
+  <h2 class="section-title" style="text-align:center;">Club <span>Values</span></h2>
+  <div class="values-grid">
+    <div class="value-card">
+      <span class="value-icon"><i class="fas fa-crown"></i></span>
+      <div class="value-title">Excellence</div>
+      <div class="value-text">The highest standards on and off the pitch. Mediocrity has no place at the Bernabéu.</div>
+      <div class="value-num">01</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon"><i class="fas fa-users"></i></span>
+      <div class="value-title">Unity</div>
+      <div class="value-text">500 million fans worldwide. One family, one crest, one unbreakable bond across generations.</div>
+      <div class="value-num">02</div>
+    </div>
+    <div class="value-card">
+      <span class="value-icon"><i class="fas fa-bolt"></i></span>
+      <div class="value-title">Ambition</div>
+      <div class="value-text">Every title won is the foundation for the next. The pursuit of greatness never ends.</div>
+      <div class="value-num">03</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESIDENTS -->
+<section class="presidents-section">
+  <p class="section-eyebrow">Leadership</p>
+  <h2 class="section-title">Club <span>Presidents</span></h2>
+  <div class="presidents-grid">
+    <div class="president-card"><div class="president-era">1943 – 1978</div><div class="president-name">Santiago Bernabéu Yeste</div></div>
+    <div class="president-card"><div class="president-era">1978 – 1985</div><div class="president-name">Luis de Carlos</div></div>
+    <div class="president-card"><div class="president-era">1985 – 1995</div><div class="president-name">Ramón Mendoza</div></div>
+    <div class="president-card"><div class="president-era">1995 – 2000</div><div class="president-name">Lorenzo Sanz</div></div>
+    <div class="president-card"><div class="president-era">2000 – 2006</div><div class="president-name">Florentino Pérez</div></div>
+    <div class="president-card"><div class="president-era">2006 – 2009</div><div class="president-name">Ramón Calderón</div></div>
+    <div class="president-card"><div class="president-era">2009 – Present</div><div class="president-name">Florentino Pérez</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Real Madrid CF</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a><a href="squad.html">Squad</a>
+    <a href="matches.html">Matches</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+  </div>
+  <div>
+    <div class="footer-copy">© 2025 Real Madrid CF. All rights reserved.</div>
+    <div class="footer-project">CSC322 · Dr. Resala AlAdraj · ASU</div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+$(document).ready(function () {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) $(e.target).addClass('visible'); });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.timeline-item').forEach(el => observer.observe(el));
+});
+</script>
+</body>
+</html>
